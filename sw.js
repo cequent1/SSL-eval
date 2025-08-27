@@ -1,26 +1,13 @@
 // Service Worker pour l'application SSL Evaluation
-const CACHE_NAME = 'ssl-eval-v4';
+const CACHE_NAME = 'ssl-eval-v7';
 const urlsToCache = [
   './',
-  './index.html',
+  './index.html'
 ];
 
 // Installation du service worker
 self.addEventListener('install', function(event) {
   console.log('Service Worker: Installation en cours...');
-  
-  event.waitUntil(
-    caches.open(CACHE_NAME)
-      .then(function(cache) {
-        console.log('Service Worker: Mise en cache des fichiers');
-        return cache.addAll(urlsToCache);
-      })
-  );
-});
-
-// Activation du service worker
-self.addEventListener('activate', function(event) {
-  console.log('Service Worker: Activation');
   
   event.waitUntil(
     caches.open(CACHE_NAME)
@@ -38,6 +25,7 @@ self.addEventListener('activate', function(event) {
   );
 });
 
+// Activation du service worker
 self.addEventListener('activate', function(event) {
   console.log('Service Worker: Activation');
   
@@ -58,6 +46,11 @@ self.addEventListener('activate', function(event) {
 
 // Interception des requêtes
 self.addEventListener('fetch', function(event) {
+  // Ignore les requêtes d'extensions et autres protocoles non HTTP
+  if (!event.request.url.startsWith('http')) {
+    return;
+  }
+  
   event.respondWith(
     caches.match(event.request)
       .then(function(response) {
@@ -82,6 +75,12 @@ self.addEventListener('fetch', function(event) {
             });
 
           return response;
+        }).catch(function() {
+          // Retourne une réponse par défaut en cas d'erreur réseau
+          return new Response('Application hors ligne', {
+            status: 200,
+            headers: { 'Content-Type': 'text/plain' }
+          });
         });
       }
     )
