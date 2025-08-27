@@ -736,7 +736,7 @@ window.addEventListener('load', () => {
         <div class="section active" id="mainMenu">
             <h2 style="margin-bottom: 20px; color: #2c3e50; text-align: center;">Menu principal</h2>
             <button class="btn" onclick="showCreateGroup()">🆕 Créer un nouveau groupe</button>
-            <button class="btn btn-secondary" onclick="showGroupList()">📋 Selectionner un groupe</button>
+            <button class="btn btn-secondary" onclick="showGroupList()">📋 Sélectionner un groupe</button>
             <button class="btn btn-secondary" onclick="showObjectives()">ℹ️ Objectifs</button>
         </div>
 
@@ -745,7 +745,7 @@ window.addEventListener('load', () => {
             <div class="nav-buttons">
                 <button class="btn btn-secondary" onclick="showMainMenu()">← Menu Principal</button>
             </div>
-            <h2 style="margin-bottom: 20px; color: #2c3e50;">Selectionner Groupe</h2>
+            <h2 style="margin-bottom: 20px; color: #2c3e50;">Sélectionner un groupe</h2>
             <div id="groupList" class="group-list"></div>
         </div>
 
@@ -767,11 +767,11 @@ window.addEventListener('load', () => {
             </div>
 
             <div class="participant-list">
-                <h3>Participants :</h3>
+               <h3 style="margin-bottom: 15px;">Participants :</h3>
                 <div id="participantInputs">
                     <div class="participant-item">
                         <input type="text" placeholder="Prénom" class="participant-name-input">
-                        <button class="btn btn-danger btn-small" onclick="removeParticipant(this)">Supprimer</button>
+                        <button class="btn btn-danger btn-small" onclick="removeParticipant(this)">🗑</button>
                     </div>
                 </div>
                 <button class="btn btn-secondary" onclick="addParticipant()">+ Ajouter Participant</button>
@@ -783,7 +783,7 @@ window.addEventListener('load', () => {
         <!-- Objectives View Section -->
         <div class="section" id="objectivesSection">
             <div class="nav-buttons">
-                <button class="btn btn-secondary" onclick="showMainMenu()">← Menu Principal</button>
+                <button class="btn btn-secondary" onclick="showMainMenu()">← Menu principal</button>
             </div>
             <h2 style="margin-bottom: 20px; color: #2c3e50;">Objectifs par niveau</h2>
 
@@ -802,8 +802,8 @@ window.addEventListener('load', () => {
         <!-- Evaluation Section -->
         <div class="section" id="evaluationSection">
             <div class="nav-buttons">
-                <button class="btn btn-secondary" onclick="showGroupList()">← Menu</button>
-                <button class="btn btn-secondary" onclick="showAddParticipant()">Ajouter Participant</button>
+                <button class="btn btn-secondary" onclick="showGroupList()">← Sélection de groupe</button>
+                <button class="btn btn-secondary" onclick="showAddParticipant()">Ajouter participant</button>
             </div>
 
 
@@ -1249,10 +1249,23 @@ window.addEventListener('load', () => {
             // Add one empty field for new participants
             addParticipant();
 
-            // Change button text and function
+            // Changement du bouton de validation
             const submitBtn = container.parentElement.parentElement.querySelector('button[onclick="createGroup()"]');
             submitBtn.textContent = 'Sauvegarder les modifications';
             submitBtn.onclick = saveGroupEdits;
+
+            // Changer le bouton de navigation en haut
+            const navBtn = document.querySelector('#createGroupSection .nav-buttons button[onclick="showMainMenu()"]');
+            if (navBtn) {
+                navBtn.textContent = '← Retour à l\'évaluation';
+                navBtn.onclick = function() { 
+                    if (confirm('Sauvegarder les modifications avant de retourner ?')) {
+                        saveGroupEdits();
+                    } else {
+                        showEvaluation();
+                    }
+                };
+            }
 
             // Change section title
             document.querySelector('#createGroupSection h2').textContent = 'Modifier le groupe';
@@ -1318,6 +1331,7 @@ window.addEventListener('load', () => {
             group.participants = newParticipants;
 
             // Reset form state
+            resetCreateGroupForm();
             isEditMode = false;
 
             saveData();
@@ -1332,6 +1346,13 @@ window.addEventListener('load', () => {
             if (createBtn) {
                 createBtn.textContent = 'Créer le groupe & évaluer';
                 createBtn.onclick = createGroup;
+            }
+
+            // Remettre le bouton de navigation original
+            const navBtn = document.querySelector('#createGroupSection .nav-buttons button');
+            if (navBtn) {
+                navBtn.textContent = '← Menu Principal';
+                navBtn.onclick = showMainMenu;
             }
 
             // Reset section title
