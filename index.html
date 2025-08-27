@@ -570,6 +570,84 @@
             outline: none;
         }
 
+        /* Optimisations mobile - À ajouter à la fin de tes styles CSS existants */
+
+        /* Amélioration des zones tactiles */
+        .btn, .objective-checkbox, .chip-checkbox, .info-icon {
+            min-height: 44px;
+            min-width: 44px;
+        }
+
+        /* Meilleure lisibilité sur petits écrans */
+        @media (max-width: 480px) {
+            .container {
+                margin: 0;
+                border-radius: 0;
+                min-height: 100vh;
+            }
+            
+            .participant-header {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 8px;
+            }
+            
+            .level-controls {
+                align-self: flex-end;
+            }
+            
+            .nav-buttons {
+                flex-direction: column;
+            }
+            
+            .nav-buttons .btn {
+                margin-bottom: 5px;
+            }
+            
+            .setup-row {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            
+            .setup-row label {
+                min-width: auto;
+                margin-bottom: 5px;
+            }
+            
+            .participants-row {
+                gap: 5px;
+            }
+            
+            .participant-chip {
+                font-size: 12px;
+                padding: 6px 10px;
+            }
+        }
+
+        /* Éviter le zoom sur les inputs iOS */
+        input, select, textarea {
+            font-size: 16px;
+        }
+
+        /* Meilleure expérience tactile */
+        .objective-text, .name-button {
+            user-select: none;
+            -webkit-user-select: none;
+            -webkit-touch-callout: none;
+        }
+
+        /* Animation pour feedback tactile */
+        .btn:active, .objective-checkbox:active, .chip-checkbox:active {
+            transform: scale(0.95);
+        }
+
+        /* PWA spécifique - masquer les éléments si installé */
+        @media (display-mode: standalone) {
+            /* Styles spécifiques quand l'app est installée */
+            .header {
+                padding-top: 30px; /* Compensation pour la barre de statut */
+            }
+    }
         
     </style>
 </head>
@@ -587,6 +665,70 @@ if ('serviceWorker' in navigator) {
       });
   });
 }
+
+// Gestion de l'installation PWA
+let deferredPrompt;
+let installButton;
+
+// Créer le bouton d'installation
+function createInstallButton() {
+  const mainMenu = document.getElementById('mainMenu');
+  if (mainMenu && !document.getElementById('installBtn')) {
+    installButton = document.createElement('button');
+    installButton.id = 'installBtn';
+    installButton.className = 'btn btn-success';
+    installButton.innerHTML = '📱 Installer l\'application';
+    installButton.style.display = 'none';
+    installButton.addEventListener('click', installApp);
+    
+    // Insérer avant le dernier bouton du menu principal
+    const lastButton = mainMenu.querySelector('button:last-child');
+    mainMenu.insertBefore(installButton, lastButton);
+  }
+}
+
+// Écouter l'événement d'installation
+window.addEventListener('beforeinstallprompt', (e) => {
+  console.log('PWA peut être installée');
+  e.preventDefault();
+  deferredPrompt = e;
+  
+  createInstallButton();
+  if (installButton) {
+    installButton.style.display = 'block';
+  }
+});
+
+// Fonction d'installation
+function installApp() {
+  if (deferredPrompt) {
+    deferredPrompt.prompt();
+    deferredPrompt.userChoice.then((choiceResult) => {
+      if (choiceResult.outcome === 'accepted') {
+        console.log('Utilisateur a accepté l\'installation');
+        if (installButton) {
+          installButton.style.display = 'none';
+        }
+      }
+      deferredPrompt = null;
+    });
+  }
+}
+
+// Masquer le bouton si déjà installé
+window.addEventListener('appinstalled', () => {
+  console.log('PWA installée avec succès');
+  if (installButton) {
+    installButton.style.display = 'none';
+  }
+  deferredPrompt = null;
+});
+
+// Initialiser le bouton au chargement
+window.addEventListener('load', () => {
+  createInstallButton();
+});
+
 </script>
 
 <body>
