@@ -1,0 +1,1681 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#667eea">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-status-bar-style" content="default">
+    <meta name="mobile-web-app-title" content="SSL Evaluation">
+    <link rel="manifest" href="manifest.json">
+    <!--    <link rel="apple-touch-icon" sizes="180x180" href="icons/apple-touch-icon.png">
+            <link rel="icon" type="image/png" sizes="32x32" href="icons/favicon-32x32.png">
+            <link rel="icon" type="image/png" sizes="16x16" href="icons/favicon-16x16.png"> -->
+
+    <title>Sports Evaluation Tool</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 10px;
+        }
+
+        .container {
+            max-width: 400px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.877);
+            border-radius: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(45deg, #ff6b6b, #ff8e8e);
+            color: white;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        .section {
+            padding: 20px;
+            display: none;
+        }
+
+        .section.active {
+            display: block;
+        }
+
+        .setup-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            align-items: center;
+        }
+
+        .setup-row label {
+            font-weight: 600;
+            min-width: 100px;
+        }
+
+        .setup-row input,
+        .setup-row select {
+            flex: 1;
+            padding: 8px 12px;
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+
+        .btn {
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            transition: transform 0.2s;
+            margin-bottom: 10px;
+        }
+
+        .m-0 {
+            margin: 0px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+        }
+
+        .btn-danger {
+            background: #dc3545;
+        }
+
+        .btn-success {
+            background: #28a745;
+        }
+
+        .btn-small {
+            width: auto;
+            padding: 6px 15px;
+            font-size: 14px;
+        }
+
+        .group-list {
+            margin: 20px 0;
+        }
+
+        .group-item {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 15px;
+            margin-bottom: 10px;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .group-item:hover {
+            border-color: #667eea;
+            transform: translateY(-2px);
+        }
+
+        .group-name {
+            font-weight: 700;
+            font-size: 18px;
+            color: #2c3e50;
+            margin-bottom: 5px;
+        }
+
+        .group-info {
+            font-size: 14px;
+            color: #666;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .group-actions {
+            display: flex;
+            gap: 5px;
+        }
+
+        .participant-list {
+            margin: 20px 0;
+        }
+
+        .participant-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 10px;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .participant-item input {
+            flex: 1;
+            border: 1px solid #ddd;
+            padding: 6px 10px;
+            border-radius: 4px;
+        }
+
+        .participant-card {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-left: 4px solid #667eea;
+        }
+
+        .participant-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .participant-name {
+            font-weight: 700;
+            font-size: 18px;
+            color: #2c3e50;
+        }
+
+        .level-controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .level-badge {
+            background: linear-gradient(45deg, #ff6b6b, #ff8e8e);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        .level-select {
+            padding: 4px 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+
+        .objectives-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 8px;
+        }
+
+        .objective-item {
+            display: flex;
+            align-items: center;
+            text-align: justify;
+            gap: 10px;
+            padding: 10px;
+            background: white;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        .objective-checkbox {
+            width: 20px;
+            height: 20px;
+            border: 2px solid #ddd;
+            border-radius: 4px;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.2s;
+            flex-shrink: 0;
+        }
+
+        .objective-checkbox.checked {
+            background: #4CAF50;
+            border-color: #4CAF50;
+        }
+
+        .objective-checkbox.checked::after {
+            content: '✓';
+            position: absolute;
+            color: white;
+            font-size: 14px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        .objective-text {
+            flex: 1;
+            cursor: pointer;
+        }
+
+        .name-button {
+            flex: 1;
+            cursor: pointer;
+        }
+
+        .info-icon {
+            width: 20px;
+            height: 20px;
+            margin-left: 20px;
+            background: #17a2b8;
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            cursor: pointer;
+            flex-shrink: 0;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #e0e0e0;
+            border-radius: 4px;
+            margin-top: 10px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(45deg, #4CAF50, #45a049);
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .summary {
+            text-align: center;
+            padding: 15px;
+            background: #f8f9fa;
+            margin-top: 10px;
+            font-weight: 600;
+        }
+
+        .nav-buttons {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+
+        .nav-buttons .btn {
+            margin-bottom: 0;
+            flex: 1;
+        }
+
+        .view-toggle {
+            display: flex;
+            background: #e9ecef;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            overflow: hidden;
+        }
+
+        .view-toggle button {
+            flex: 1;
+            padding: 10px;
+            border: none;
+            background: transparent;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .view-toggle button.active {
+            background: #667eea;
+            color: white;
+        }
+
+        /* Objective-centered view styles */
+        .objective-section {
+            background: #f8f9fa;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 15px;
+        }
+
+        .objective-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 15px;
+        }
+
+        .objective-title {
+            font-weight: 700;
+            font-size: 16px;
+            color: #2c3e50;
+            flex: 1;
+        }
+
+        .level-group {
+            margin-bottom: 15px;
+            text-align: justify;
+        }
+
+        .level-group-header {
+            display: flex;
+            color: #666;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .level-group-title {
+            display: flex;
+            font-weight: 700;
+            font-size: 16px;
+            color: #2c3e50;
+            margin-bottom: 10px;
+            flex: 1;
+        }
+
+        .participants-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .participant-chip {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: white;
+            padding: 8px 12px;
+            border-radius: 20px;
+            border: 2px solid #e1e5e9;
+            font-size: 14px;
+        }
+
+        .participant-chip.completed {
+            background: #d4edda;
+            border-color: #4CAF50;
+        }
+
+        .chip-checkbox {
+            width: 16px;
+            height: 16px;
+            border: 2px solid #ddd;
+            border-radius: 3px;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.2s;
+        }
+
+        .chip-checkbox.checked {
+            background: #4CAF50;
+            border-color: #4CAF50;
+        }
+
+        .chip-checkbox.checked::after {
+            content: '✓';
+            position: absolute;
+            color: white;
+            font-size: 10px;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        /* Modal styles */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 5% auto;
+            padding: 20px;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 500px;
+            position: relative;
+            max-height: 100%;
+            overflow-y: auto;
+        }
+
+        .modal-content-info {
+            background-color: white;
+            margin: 60% auto;
+            padding: 20px;
+            border-radius: 10px;
+            width: 90%;
+            max-width: 500px;
+            position: relative;
+            max-height: 100%;
+            overflow-y: auto;
+        }
+
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            line-height: 1;
+        }
+
+        .close:hover {
+            color: black;
+        }
+
+        .modal h3 {
+            margin-bottom: 15px;
+            color: #2c3e50;
+        }
+
+        .modal textarea {
+            width: 100%;
+            height: 100px;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            resize: vertical;
+            margin-bottom: 10px;
+            text-align: justify;
+            text-justify: inter-word;
+        }
+
+        .modalObjectiveDescription {
+            text-align: justify;
+        }
+
+        #modalObjectiveDescription {
+            text-align: justify;
+        }
+
+        .edit-objectives {
+            margin-top: 20px;
+        }
+
+        .objective-editor {
+            margin-bottom: 5px;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 5px;
+        }
+
+        .evaluation-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            outline: none;
+            border: none;
+        }
+
+        .evaluation-title {
+            display: flex;
+            margin: 0 auto;
+        }
+
+        .evaluation-actions {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .objective-editor input {
+            width: 100%;
+            margin-bottom: 5px;
+            padding: 5px;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #666;
+        }
+
+        .empty-state h3 {
+            margin-bottom: 10px;
+            color: #2c3e50;
+        }
+
+        div:focus,
+        button:focus {
+            outline: none;
+        }
+
+        
+    </style>
+</head>
+
+<script>
+// Enregistrement du service worker
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', function() {
+    navigator.serviceWorker.register('./sw.js')
+      .then(function(registration) {
+        console.log('Service Worker enregistré avec succès:', registration.scope);
+      })
+      .catch(function(error) {
+        console.log('Échec enregistrement Service Worker:', error);
+      });
+  });
+}
+</script>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Objectifs Swiss Snow League</h1>
+            <p>Suivi des objectifs</p>
+        </div>
+
+        <!-- Main Menu Section -->
+        <div class="section active" id="mainMenu">
+            <h2 style="margin-bottom: 20px; color: #2c3e50; text-align: center;">Menu principal</h2>
+            <button class="btn" onclick="showCreateGroup()">🆕 Créer un nouveau groupe</button>
+            <button class="btn btn-secondary" onclick="showGroupList()">📋 Selectionner un groupe</button>
+            <button class="btn btn-secondary" onclick="showObjectives()">ℹ️ Objectifs</button>
+        </div>
+
+        <!-- Group List Section -->
+        <div class="section" id="groupListSection">
+            <div class="nav-buttons">
+                <button class="btn btn-secondary" onclick="showMainMenu()">← Menu Principal</button>
+            </div>
+            <h2 style="margin-bottom: 20px; color: #2c3e50;">Selectionner Groupe</h2>
+            <div id="groupList" class="group-list"></div>
+        </div>
+
+        <!-- Create Group Section -->
+        <div class="section" id="createGroupSection">
+            <div class="nav-buttons">
+                <button class="btn btn-secondary" onclick="showMainMenu()">← Menu Principal</button>
+            </div>
+            <h2 style="margin-bottom: 20px; color: #2c3e50;">Créer groupe</h2>
+
+            <div class="setup-row">
+                <input type="text" id="groupName" placeholder="Nom du groupe">
+            </div>
+
+            <div class="setup-row">
+                <select id="groupLevel">
+
+                </select>
+            </div>
+
+            <div class="participant-list">
+                <h3>Participants :</h3>
+                <div id="participantInputs">
+                    <div class="participant-item">
+                        <input type="text" placeholder="Prénom" class="participant-name-input">
+                        <button class="btn btn-danger btn-small" onclick="removeParticipant(this)">Supprimer</button>
+                    </div>
+                </div>
+                <button class="btn btn-secondary" onclick="addParticipant()">+ Ajouter Participant</button>
+            </div>
+
+            <button class="btn" onclick="createGroup()">Créer le groupe & évaluer</button>
+        </div>
+
+        <!-- Objectives View Section -->
+        <div class="section" id="objectivesSection">
+            <div class="nav-buttons">
+                <button class="btn btn-secondary" onclick="showMainMenu()">← Menu Principal</button>
+            </div>
+            <h2 style="margin-bottom: 20px; color: #2c3e50;">Objectifs par niveau</h2>
+
+            <div class="setup-row">
+                <p>Niveau :</p>
+                <select id="objectivesLevel" onchange="displayObjectivesForLevel(this.value)">
+                    <!-- Will be populated by JavaScript -->
+                </select>
+            </div>
+
+            <div id="objectivesDisplay" style="margin-top: 20px;">
+                <!-- Objectives will be displayed here -->
+            </div>
+        </div>
+
+        <!-- Evaluation Section -->
+        <div class="section" id="evaluationSection">
+            <div class="nav-buttons">
+                <button class="btn btn-secondary" onclick="showGroupList()">← Menu</button>
+                <button class="btn btn-secondary" onclick="showAddParticipant()">Ajouter Participant</button>
+            </div>
+
+
+            <div class="evaluation-header">
+                <div class="evaluation-title">
+                    <h2 id="currentGroupName" style="color: #2c3e50;"></h2>
+                </div>
+                <div class="evaluation-actions">
+                    <button class="btn btn-danger btn-small" onclick="deleteCurrentGroup()">🗑 Supprimer</button>
+                    <button class="btn btn-secondary btn-small" onclick="editCurrentGroup()">✎ Modifier</button>
+                </div>
+            </div>
+
+
+            <div class="view-toggle">
+                <button id="viewByObjective" onclick="switchView('objective')">Par objectif</button>
+                <button id="viewByParticipant" class="active" onclick="switchView('participant')">Par participant</button>
+                
+            </div>
+
+            <div id="participantView">
+                <div id="participantsList"></div>
+            </div>
+
+            <div id="objectiveView" style="display: none;">
+                <div id="objectivesList"></div>
+            </div>
+
+            <div class="summary" id="classSummary"></div>
+        </div>
+    </div>
+
+    
+
+    <!-- Objective Info Modal -->
+    <div id="objectiveModal" class="modal">
+        <div class="modal-content-info">
+            <span class="close">&times;</span>
+            <h3 id="modalObjectiveTitle">Détail De L'Objectif</h3>
+            <p id="modalObjectiveDescription"></p>
+        </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div id="deleteModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h3>Supprimer le groupe</h3>
+            <p>Etes-vous sûr de vouloir supprimer ce groupe ? Cette action ne pourra pas être annulée.</p>
+            <div style="display: flex; gap: 10px; margin-top: 20px;">
+                <button class="btn btn-danger" onclick="confirmDeleteGroup()">Supprimer</button>
+                <button class="btn btn-secondary" onclick="closeModal('deleteModal')">Annuler</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add Participant Modal -->
+    <div id="addParticipantModal" class="modal">
+        <div class="modal-content">
+            <span class="close">&times;</span>
+            <h3>Ajouter Participant</h3>
+            <div class="setup-row">
+                <p>Nom:</p>
+                <input type="text" id="newParticipantName" placeholder="Nom du participant">
+            </div>
+            <div class="setup-row">
+                <p>Niveau:</p>
+                <select id="newParticipantLevel">
+                    <!-- Will be populated by JavaScript -->
+                </select>
+            </div>
+            <div style="display: flex; gap: 10px; margin-top: 20px;">
+                <button class="btn" onclick="addNewParticipant()">Ajouter</button>
+                <button class="btn btn-secondary" onclick="closeModal('addParticipantModal')">Annuler</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Centralized level names
+        const LEVEL_NAMES = {
+            1: "Swiss Snow Kids Village",
+            2: "Blue Prince",
+            3: "Blue King/Queen",
+            4: "Blue Star",
+            5: "Red Prince",
+            6: "Red King/Queen",
+            7: "Red Star",
+            8: "Black Prince",
+            9: "Academy Race",
+            10: "Academy Freestyle",
+            11: "Academy Freeride"
+        };
+
+        // Helper function to get level display name
+        function getLevelName(levelNumber) {
+            return LEVEL_NAMES[levelNumber];
+        }
+
+        // Fonction pour obtenir la couleur selon le niveau
+        function getLevelColor(level) {
+            if (level === 1) return '#28a745'; // Vert
+            if (level >= 2 && level <= 4) return '#007bff'; // Bleu  
+            if (level >= 5 && level <= 7) return '#dc3545'; // Rouge
+            if (level >= 8 && level <= 11) return '#343a40'; // Noir
+            return '#667eea'; // Couleur par défaut
+        }
+
+        // Helper function to generate level options for dropdowns
+        function generateLevelOptions(selectedLevel = null) {
+            return Object.keys(LEVEL_NAMES).map(level => {
+                const selected = selectedLevel == level ? 'selected' : '';
+                return `<option value="${level}" ${selected}>${LEVEL_NAMES[level]}</option>`;
+            }).join('');
+        }
+        // Default objective data
+        const defaultObjectives = {
+            1: [
+                { name: "Informations sur les skis et la neige", 
+                description: "Comportement ludique, dans une position debout et naturelle, en rapport avec la situation présente et le matériel de ski." },
+                { name: "Marcher, tourner et monter avec les skis", 
+                description: "Déplacement indépendant et monter avec les skis avec des aides didactiques." },
+                { name: "Glisser dans la ligne de pente avec les skis parallèles et freiner", 
+                description: "Descendre dans la ligne de pente avec les skis parallèles. Freiner, dans une certaine mesure, avec des aides didactiques." },
+                { name: "Premier changement de direction depuis la ligne de pente", 
+                description: "Léger changement de direction avec les skis parallèles ou en chasse-neige, avec des aides didactiques." }
+            ],
+            2: [
+                { name: "Monter en escalier et en ciseaux", 
+                description: "Monter seul en escaliers et en ciseaux sans aide didactique." },
+                { name: "Glisser et freiner en chasse-neige", 
+                description: "Glisser et freiner seul avec une position de chasse-neige symétrique (contrôle de la vitesse)." },
+                { name: "Glisser avec les skis parallèles avec des pas et des tricks", 
+                description: "Dans la ligne de pente, exercices en lien avec l'équilibre et exécutés de manière sûre et contrôlée, avec et sans aide didactique." },
+                { name: "Chasse-neige tournant", 
+                description: "Virages fluides et enchaînés en position de chasse-neige." }
+            ],
+            3: [
+                { name: "Descente en traversée et tricks", 
+                description: "Traversée avec les skis parallèles sur les carres amont, sans déraper et des 2 côtés. Exercices contrôlés en lien avec l'équilibre avec et sans aide didactique." },
+                { name: "Dérapage latéral", 
+                description: "Dérapage latéral, des 2 côtés, proche de la ligne de pente, avec les skis parallèles." },
+                { name: "Skier des bosses et des sauts faciles avec les skis parallèles", 
+                description: "Contrôle de la vitesse avant l'élément. Passage en sécurité sur le saut ou la bosse avec les skis parallèles." },
+                { name: "Virage chasse-neige sur piste bleue facile", 
+                description: "Virages fluides et enchaînés en virage chasse-neige. Skis parallèles dans la traversée." }
+            ],                 
+            4: [
+                { name: "Virer dans une forêt de mini-piquets et un parcours", 
+                description: "Virer de manière sûre et contrôlée dans une forêt de mini-piquets et dans un parcours en respectant certaines exigences." },
+                { name: "Skier dans les creux et bosses", 
+                description: "Grâce à des mouvements de flexion/extension des jambes, conserver le contact ski-neige. Position parallèle des skis." },
+                { name: "Skier en switch avec les skis en V et changer de direction", 
+                description: "Skier de manière fluide et contrôlée en switch avec la position des skis en V. Petits changements de direction avec des mouvements de rotation." },
+                { name: "Virage chasse-neige sur piste bleue variée", 
+                description: "Descente fluide et contrôlée dans diverses formes d'organisation. Diminuer l'angle d'ouverture du chasse-neige dès la ligne de pente." }
+            ],
+            5: [
+                { name: "Freiner en parallèle", 
+                description: "Arrêt contrôlé des deux côtés avec les skis parallèles et des mouvements de bascule et d'angulation. Depuis la traversée et la ligne de pente. Attitude de base naturelle." },
+                { name: "Pas tournant sur piste facile", 
+                description: "Depuis la ligne de pente, réaliser une suite de pas enchaînés en forme de S. Il peut y avoir de courtes phases de glisse et de dérapage." },
+                { name: "Valse", 
+                description: "Valse fluide par la gauche et par la droite avec les skis le plus parallèle possible." },
+                { name: "Virage parallèle dérapé", 
+                description: "Avec une attitude de base naturelle, réaliser des virages parallèles avec les phases du virage visibles." }
+            ],
+            6: [
+                { name: "Virage court sur piste facile", 
+                description: "Virages courts rythmés avec contrôle de la vitesse et haut du corps stable." },
+                { name: "Pas de patineur au plat", 
+                description: "Changements de pas rythmé avec maîtrise de l'équilibre, utilisation des bâtons, phase de glisse et changement d'appui visibles." },
+                { name: "Basic air (small kicker)", 
+                description: "Mouvement de déclenchement visible avec les skis parallèles. Phase de vol sûre et atterrissage avec une attitude de base stable." },
+                { name: "Virage parallèle de différents rayons", 
+                description: "Avec une attitude de base naturelle, virer avec les skis parallèles en variant les rayons. Les mouvements associés aux phases du virage sont visibles." }
+            ],
+            7: [
+                { name: "Virage parallèle dans un couloir de piquets et un parcours", 
+                description: "Virer en parallèle de manière contrôlée dans un espace donné avec des transitions aussi fluides que possible. L'utilisation des bâtons et les mouvements clés sont visibles dans les phases du virage." },
+                { name: "Virage parallèle dérapé en switch", 
+                description: "Virages enchaînés en switch avec les skis aussi parallèles que possible. Les phases du virage sont visibles." },
+                { name: "Virage sur un ski sur piste facile", 
+                description: "Virages sur un ski enchaînés en équilibre sur la jambe intérieure et extérieure. Les phases du virage sont visibles et de petits appuis d'aides sont autorisés." },
+                { name: "Virage court sur piste de difficulté moyenne", 
+                description: "Virages courts rythmés avec contrôle de la vitesse et skis parallèles. Attitude de base naturelle et utilisation des bâtons visible." }
+            ],
+            8: [
+            { name: "Virage court avec utilisation des bâtons sur piste difficile", 
+            description: "Virages courts rythmés avec contrôle de la vitesse et skis parallèles. Attitude base naturelle avec haut du corps stable. Utilisation des bâtons coordonnée et phases du virage visibles." },
+            { name: "Sauts straights et fifty-fifty sur box", 
+            description: "La forme de saut est annoncée à l'avance et est démontrée. Phases de vol et d'atterrissage sûres avec une attitude de base stable. Sauter longitudinalement sur le box et glisser avec les skis parallèles et à plat." },
+            { name: "Virage parallèle en neige non préparée", 
+            description: "Descente fluide et contrôlée avec les skis parallèles en variant les rayons. Les phases du virage sont visibles." },
+            { name: "Carving (virage parallèle coupé) sur piste large et facile", 
+            description: "Virages parallèles coupés au moins avec le ski extérieur (contrôle de la vitesse). Attitude base naturelle et phases du virage visibles." }
+        ],
+            9: [
+                { name: "Virage parallèle de compétition race", 
+                description: "Attitude de base dynamique avec haut du corps stable. Mouvements clés et fonctions des skis visibles dans les phases du virage. Utilisation du drift et de la position de recherche de vitesse selon la situation." },
+                { name: "Virage court de compétition race", 
+                description: "Attitude de base dynamique avec haut du corps stable. Mouvements clés et fonctions des skis visibles dans les phases du virage." },
+                { name: "Variantes de virage", 
+                description: "Virages coupés avec augmentation active de l'angle de prise de carre par un déplacement latéral du corps (bascule/angulation). Contrôle de la vitesse par la fermeture des virages." },
+                { name: "Technique de compétition dans un parcours donné", 
+                description: "Application de la technique de compétition en slalom géant et en slalom dans un parcours donné." },
+                { name: "Saut groupé", 
+                description: "Déclenchement avec les deux jambes et traction active des jambes sous le corps. Phases de vol et d'atterrissage sûres avec une attitude de base stable." },
+                { name: "Entraînement ou compétition", 
+                description: "Choix de la ligne adapté à la situation. Mise en œuvre des racing basics." }
+            ],
+            10: [
+                { name: "Virage parallèle switch", 
+                description: "Virages parallèles enchaînés dérapés ou coupés, contrôle de la vitesse par la fermeture des virages. Position parallèle des skis." },
+                { name: "Saut droit avec grab (min. 2 grabs)", 
+                description: "Annoncer le grab avant le saut et le démontrer ensuite (min. 2 grabs différents)." },
+                { name: "Air trick spins (180°/360°)", 
+                description: "Déclenchement visible et phases de vol et d'atterrissage sûres avec une attitude de base stable." },
+                { name: "Tricks sur piste (180°, suédois 180°)", 
+                description: "180° - Phase en l'air visible. Suédois 180° - Changement de direction complet sur le nose et le tail grâce à un cisaillement des jambes." },
+                { name: "Rotation sur box ou rail", 
+                description: "Valse sur le box. Glisse sûre et contrôlée ainsi que la sortie. Rotation de 90° on/off sur rail." },
+                { name: "Pipe basic run ou Ski-cross", 
+                description: "Descente contrôlée dans le pipe avec déclenchement et atterrissage dans le vertical. Position parallèle des skis. - Ski-cross : Passage sûr des éléments. Fluidité et vitesse adaptées aux éléments." },               
+            ],
+            11: [
+                { name: "Recherche DVA, Lecture du bulletin avalanche, choix de la ligne et des points d'arrêt", 
+                description: "L'élève peut se servir du DVA et retrouver une personne ensevelie. L'élève connaît les degrés de danger et peut les interpréter. L'élève connaît la signification d'une ligne sûre et des points d'arrêt." },
+                { name: "Virage parallèle hors-piste avec variations de rayons", 
+                description: "Contrôle de la vitesse par l'adaptation des phases du virage. Attitude de base dynamique avec haut du corps stable." },
+                { name: "Traces créatives/Powder 8", 
+                description: "Grâce à une descente synchronisée et symétrique les traces dessinées sont visibles." },
+                { name: "Virage court dans les bosses", 
+                description: "Position parallèle et serrée des skis avec haut du corps stable. Rythme des mouvements adaptés aux bosses. Intégration de l'utilisation des bâtons comme aide pour le rythme." },
+                { name: "Saut de terrain ou construit", 
+                description: "Passage en sécurité des obstacles naturels. Vitesse adaptée aux obstacles. Phases de vol et d'atterrissage adaptées avec une attitude de base stable." },
+                { name: "Descente hors-piste créative", 
+                description: "Attitude de base dynamique avec haut du corps stable. Passage en sécurité des obstacles naturels et vitesse adaptée. La descente hors-piste doit être contrôlée et les virages adaptés au terrain." }
+            ],
+        };
+
+        let groups = {};
+        let currentGroupId = null;
+        let objectives = {};
+        let currentView = 'participant';
+        let isEditMode = false;
+
+        // Load data from storage
+        function loadData() {
+            const savedObjectives = JSON.parse(localStorage.getItem('skiObjectives') || 'null');
+            const savedGroups = JSON.parse(localStorage.getItem('skiGroups') || 'null');
+            const savedCurrentGroup = localStorage.getItem('currentGroupId');
+
+            objectives = savedObjectives || JSON.parse(JSON.stringify(defaultObjectives));
+            groups = savedGroups || {};
+            currentGroupId = savedCurrentGroup;
+
+            // Fix completedObjectives Sets after loading from localStorage
+            Object.keys(groups).forEach(groupId => {
+                groups[groupId].participants.forEach(participant => {
+                    if (!participant.completedObjectives) {
+                        participant.completedObjectives = new Set();
+                    } else if (Array.isArray(participant.completedObjectives)) {
+                        // Convert array back to Set (localStorage converts Sets to arrays)
+                        participant.completedObjectives = new Set(participant.completedObjectives);
+                    } else if (participant.completedObjectives.constructor !== Set) {
+                        participant.completedObjectives = new Set();
+                    }
+                });
+            });
+            validateGroupData();
+        }
+
+        // Validate and fix group data structure
+        function validateGroupData() {
+            if (!groups || typeof groups !== 'object') {
+                groups = {};
+                return;
+            }
+
+            Object.keys(groups).forEach(groupId => {
+                const group = groups[groupId];
+
+                if (!group || typeof group !== 'object') {
+                    delete groups[groupId];
+                    return;
+                }
+
+                // Ensure group has a level property
+                if (!group.level || isNaN(group.level)) {
+                    group.level = 2; // Default to Blue Prince if missing
+                }
+
+                // Ensure participants array exists
+                if (!Array.isArray(group.participants)) {
+                    group.participants = [];
+                }
+
+                // Ensure all participants have level property
+                group.participants.forEach((participant, index) => {
+                    if (!participant || typeof participant !== 'object') {
+                        group.participants[index] = {
+                            id: index + 1,
+                            name: 'Unknown Participant',
+                            level: group.level,
+                            completedObjectives: new Set()
+                        };
+                        return;
+                    }
+
+                    if (!participant.level || isNaN(participant.level)) {
+                        participant.level = group.level; // Use group level as default
+                    }
+
+                    if (!participant.name) {
+                        participant.name = `Participant ${index + 1}`;
+                    }
+
+                    if (!participant.id) {
+                        participant.id = index + 1;
+                    }
+                });
+            });
+        }
+
+        // Save data to storage
+        function saveData() {
+            // Convert Sets to arrays before saving (localStorage can't handle Sets directly)
+            const groupsToSave = {};
+            Object.keys(groups).forEach(groupId => {
+                groupsToSave[groupId] = {
+                    ...groups[groupId],
+                    participants: groups[groupId].participants.map(participant => ({
+                        ...participant,
+                        completedObjectives: Array.from(participant.completedObjectives || [])
+                    }))
+                };
+            });
+
+            localStorage.setItem('skiObjectives', JSON.stringify(objectives));
+            localStorage.setItem('skiGroups', JSON.stringify(groupsToSave));
+            if (currentGroupId) {
+                localStorage.setItem('currentGroupId', currentGroupId);
+            }
+        }
+
+        // Navigation functions
+        function showSection(sectionId) {
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.remove('active');
+            });
+            document.getElementById(sectionId).classList.add('active');
+        }
+
+        function showMainMenu() {
+            showSection('mainMenu');
+
+        }
+     
+        function showCreateGroup() {
+            isEditMode = false;
+            resetCreateGroupForm();
+
+            showSection('createGroupSection');
+            // Reset form
+            document.getElementById('groupName').value = '';
+            document.getElementById('groupLevel').innerHTML = generateLevelOptions(2);
+            const participantInputsHTML = `
+                <div class="participant-item">
+                    <input type="text" placeholder="Prénom" class="participant-name-input">
+                    <button class="btn btn-danger btn-small m-0" onclick="removeParticipant(this)">Supprimer</button>
+                </div>
+            `;
+            document.getElementById('participantInputs').innerHTML = participantInputsHTML;
+
+            // Add Enter key listener to the initial input
+            const initialInput = document.querySelector('#participantInputs .participant-name-input');
+            addEnterKeyListener(initialInput);
+        }
+
+        function showObjectives() {
+            showSection('objectivesSection');
+            
+            // Populate level dropdown
+            document.getElementById('objectivesLevel').innerHTML = generateLevelOptions(1);
+            
+            // Show objectives for level 1 by default
+            displayObjectivesForLevel(1);
+        }
+
+        function displayObjectivesForLevel(level) {
+            const container = document.getElementById('objectivesDisplay');
+            const levelObjectives = defaultObjectives[level] || [];
+            
+            if (levelObjectives.length === 0) {
+                container.innerHTML = '<div class="empty-state"><p>Aucun objectif défini pour ce niveau</p></div>';
+                return;
+            }
+            
+            container.innerHTML = levelObjectives.map(objective => `
+                <div class="objective-item" style="display: block; background: white; border: 1px solid #e1e5e9; margin-bottom: 15px; padding: 15px; border-radius: 8px;">
+                    <div style="font-weight: 600; color: #2c3e50; margin-bottom: 8px; font-size: 16px;">
+                        ${objective.name}
+                    </div>
+                    <div style="color: #666; font-size: 14px; line-height: 1.4;">
+                        ${objective.description}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function editCurrentGroup() {
+            if (!currentGroupId || !groups[currentGroupId]) {
+                alert('No group selected');
+                return;
+            }
+
+            isEditMode = true;
+            const group = groups[currentGroupId];
+
+            // Populate the form with existing data
+            document.getElementById('groupName').value = group.name;
+            document.getElementById('groupLevel').value = group.level;
+
+            // Clear and populate participants
+            const container = document.getElementById('participantInputs');
+            container.innerHTML = '';
+
+            group.participants.forEach((participant, index) => {
+                const participantDiv = document.createElement('div');
+                participantDiv.className = 'participant-item';
+                participantDiv.innerHTML = `
+                    <input type="text" placeholder="Participant name" class="participant-name-input" value="${participant.name}" data-participant-id="${participant.id}">
+                    <button class="btn btn-danger btn-small" onclick="removeParticipant(this)">Supprimer</button>
+                `;
+                container.appendChild(participantDiv);
+
+                // Add Enter key listener
+                const input = participantDiv.querySelector('.participant-name-input');
+                addEnterKeyListener(input);
+            });
+
+            // Add one empty field for new participants
+            addParticipant();
+
+            // Change button text and function
+            const submitBtn = container.parentElement.parentElement.querySelector('button[onclick="createGroup()"]');
+            submitBtn.textContent = 'Sauvegarder les modifications';
+            submitBtn.onclick = saveGroupEdits;
+
+            // Change section title
+            document.querySelector('#createGroupSection h2').textContent = 'Modifier le groupe';
+
+            showSection('createGroupSection');
+        }
+
+        function saveGroupEdits() {
+            const groupName = document.getElementById('groupName').value.trim();
+            const groupLevel = parseInt(document.getElementById('groupLevel').value);
+            const nameInputs = document.querySelectorAll('.participant-name-input');
+
+            if (!groupName) {
+                alert('Please enter a group name');
+                return;
+            }
+
+            const group = groups[currentGroupId];
+            const oldParticipants = [...group.participants]; // Keep reference for progress preservation
+
+            // Update group info
+            group.name = groupName;
+            group.level = groupLevel;
+
+            // Process participants
+            const newParticipants = [];
+            let maxId = Math.max(...oldParticipants.map(p => p.id), 0);
+
+            nameInputs.forEach(input => {
+                const name = input.value.trim();
+                if (name) {
+                    const participantId = input.dataset.participantId;
+
+                    if (participantId) {
+                        // Existing participant - preserve progress but update name and level
+                        const existingParticipant = oldParticipants.find(p => p.id == participantId);
+                        if (existingParticipant) {
+                            newParticipants.push({
+                                ...existingParticipant,
+                                name: name,
+                                level: groupLevel // Apply group level change
+                            });
+                        }
+                    } else {
+                        // New participant
+                        maxId++;
+                        newParticipants.push({
+                            id: maxId,
+                            name: name,
+                            level: groupLevel,
+                            completedObjectives: new Set()
+                        });
+                    }
+                }
+            });
+
+            if (newParticipants.length === 0) {
+                alert('Please enter at least one participant name');
+                return;
+            }
+
+            // Update group with new participants list
+            group.participants = newParticipants;
+
+            // Reset form state
+            isEditMode = false;
+
+            saveData();
+            showEvaluation();
+        }
+
+
+
+        function resetCreateGroupForm() {
+            // Reset the main action button (the one that creates/saves)
+            const createBtn = document.querySelector('#createGroupSection button[onclick*="createGroup"], #createGroupSection button[onclick*="saveGroupEdits"]');
+            if (createBtn) {
+                createBtn.textContent = 'Créer le groupe & évaluer';
+                createBtn.onclick = createGroup;
+            }
+
+            // Reset section title
+            document.querySelector('#createGroupSection h2').textContent = 'Créer groupe';
+        }
+
+        function showGroupList() {
+            showSection('groupListSection');
+            renderGroupList();
+        }
+
+        function renderGroupList() {
+            const container = document.getElementById('groupList');
+            const groupIds = Object.keys(groups);
+
+            if (groupIds.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <h3>No Groups Yet</h3>
+                        <p>Create your first group to get started!</p>
+                    </div>
+                `;
+                return;
+            }
+
+            container.innerHTML = groupIds.map(groupId => {
+                const group = groups[groupId];
+
+                // Safe fallbacks for missing properties
+                const groupLevel = group.level || 2;
+                const participantCount = (group.participants && group.participants.length) || 0;
+                const groupName = group.name || 'Unnamed Group';
+
+                return `
+                    <div class="group-item" onclick="selectGroup('${groupId}')">
+                        <div class="group-name">${group.name}</div>
+                        <div class="group-info">
+                            <span>${group.participants.length} participants •</span><span style="color: ${getLevelColor(groupLevel)}">${getLevelName(groupLevel)}</span>
+                            <div class="group-actions" onclick="event.stopPropagation()">
+                                <button class="btn btn-danger btn-small" onclick="deleteGroup('${groupId}')">Supprimer</button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function addParticipant() {
+            const container = document.getElementById('participantInputs');
+            const participantDiv = document.createElement('div');
+            participantDiv.className = 'participant-item';
+            participantDiv.innerHTML = `
+                <input type="text" placeholder="Prénom" class="participant-name-input">
+                <button class="btn btn-danger btn-small" onclick="removeParticipant(this)">Supprimer</button>
+            `;
+            container.appendChild(participantDiv);
+            // Add Enter key listener to the new input
+            const newInput = participantDiv.querySelector('.participant-name-input');
+            addEnterKeyListener(newInput);
+        }
+
+        function addEnterKeyListener(inputElement) {
+            inputElement.addEventListener('keypress', function (event) {
+                if (event.key === 'Enter') {
+                    event.preventDefault(); // Prevent form submission
+
+                    const currentValue = this.value.trim();
+                    if (currentValue !== '') {
+                        // Add new participant field
+                        addParticipant();
+
+                        // Focus on the new input field
+                        const allInputs = document.querySelectorAll('#participantInputs .participant-name-input');
+                        const lastInput = allInputs[allInputs.length - 1];
+                        lastInput.focus();
+                    }
+                }
+            });
+        }
+
+        function removeParticipant(button) {
+            const container = document.getElementById('participantInputs');
+            if (container.children.length > 1) {
+                button.parentElement.remove();
+            }
+        }
+        function getSmartGroupName(originalName) {
+            const existingGroups = Object.values(groups);
+            const today = new Date();
+            const todayStr = today.toLocaleDateString('en-US', { month: 'short', day: 'numeric' });
+            const timeStr = today.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: false });
+
+            // Check if name exists
+            const exactMatch = existingGroups.find(g => g.name === originalName);
+            if (!exactMatch) {
+                // First time using this name - keep it clean
+                return originalName;
+            }
+
+            // Check for same-day duplicates
+            const todayGroups = existingGroups.filter(g => {
+                const groupDate = new Date(g.createdAt);
+                return groupDate.toDateString() === today.toDateString() &&
+                    g.name.startsWith(originalName);
+            });
+
+            if (todayGroups.length > 0) {
+                // Same day duplicate - add time
+                return `${originalName} (${timeStr})`;
+            } else {
+                // Different day - add date
+                return `${originalName} (${todayStr})`;
+            }
+        }
+
+        function createGroup() {
+            const groupName = document.getElementById('groupName').value.trim();
+            const groupLevel = parseInt(document.getElementById('groupLevel').value);
+            const nameInputs = document.querySelectorAll('.participant-name-input');
+
+            if (!groupName) {
+                alert('Please enter a group name');
+                return;
+            }
+
+            const participants = [];
+            nameInputs.forEach((input, index) => {
+                const name = input.value.trim();
+                if (name) {
+                    participants.push({
+                        id: index + 1,
+                        name: name,
+                        level: groupLevel,
+                        completedObjectives: new Set()
+                    });
+                }
+            });
+
+            if (participants.length === 0) {
+                alert('Veuillez entrer au moins un prénom.');
+                return;
+            }
+
+            const groupId = Date.now().toString();
+            groups[groupId] = {
+                id: groupId,
+                name: getSmartGroupName(groupName),
+                level: groupLevel,
+                participants: participants,
+                createdAt: new Date().toISOString()
+            };
+
+            currentGroupId = groupId;
+            saveData();
+            showEvaluation();
+        }
+
+        function selectGroup(groupId) {
+            currentGroupId = groupId;
+            saveData();
+            showEvaluation();
+        }
+
+        function showEvaluation() {
+            if (!currentGroupId || !groups[currentGroupId]) {
+                alert('No group selected');
+                return;
+            }
+
+            showSection('evaluationSection');
+            document.getElementById('currentGroupName').textContent = groups[currentGroupId].name;
+            switchView(currentView);
+        }
+
+        function switchView(viewType) {
+            currentView = viewType;
+
+            document.getElementById('viewByParticipant').classList.toggle('active', viewType === 'participant');
+            document.getElementById('viewByObjective').classList.toggle('active', viewType === 'objective');
+
+            document.getElementById('participantView').style.display = viewType === 'participant' ? 'block' : 'none';
+            document.getElementById('objectiveView').style.display = viewType === 'objective' ? 'block' : 'none';
+
+            if (viewType === 'participant') {
+                renderParticipants();
+            } else {
+                renderObjectives();
+            }
+            updateClassSummary();
+        }
+
+        function renderParticipants() {
+            const container = document.getElementById('participantsList');
+            const group = groups[currentGroupId];
+            container.innerHTML = '';
+
+            group.participants.forEach(participant => {
+                const card = createParticipantCard(participant);
+                container.appendChild(card);
+            });
+        }
+
+        function renderObjectives() {
+            const container = document.getElementById('objectivesList');
+            const group = groups[currentGroupId];
+
+            // Group participants by level
+            const participantsByLevel = {};
+            group.participants.forEach(participant => {
+                if (!participantsByLevel[participant.level]) {
+                    participantsByLevel[participant.level] = [];
+                }
+                participantsByLevel[participant.level].push(participant);
+            });
+
+            container.innerHTML = '';
+
+            // Get objectives for main group level
+            const mainLevelObjectives = defaultObjectives[group.level] || [];
+
+            mainLevelObjectives.forEach((objective, objectiveIndex) => {
+                const section = document.createElement('div');
+                section.className = 'objective-section';
+
+                section.innerHTML = `
+                    ${Object.keys(participantsByLevel).map(level => {
+                    const levelParticipants = participantsByLevel[level];
+                    const levelObjectives = defaultObjectives[level] || [];
+                    const levelObjective = levelObjectives[objectiveIndex];
+
+                    if (!levelObjective) return '';
+
+                    return `
+                        <div class="level-group">
+                            <div class="level-group-header">
+                                <div class="level-group-title">${levelObjective.name}</div>
+                                <div class="info-icon" data-obj-name="${levelObjective.name}" data-obj-desc="${levelObjective.description}" onclick="showObjectiveInfoFromData(this)">i</div>
+                            </div>
+                                <div class="participants-row">
+                                ${levelParticipants.map(participant => `
+                                    <div class="participant-chip ${participant.completedObjectives.has(objectiveIndex) ? 'completed' : ''}">
+                                        <div class="chip-checkbox ${participant.completedObjectives.has(objectiveIndex) ? 'checked' : ''}" 
+                                                onclick="toggleObjectiveInView(${participant.id}, ${objectiveIndex})"></div>
+                                        <span class="name-button" onclick="toggleObjectiveInView(${participant.id}, ${objectiveIndex})" >${participant.name}</span>
+                                    </div>
+                                `).join('')}
+                            </div>
+                        </div>
+                    `;
+                }).join('')}
+                `;
+
+                container.appendChild(section);
+            });
+        }
+
+        function createParticipantCard(participant) {
+            const card = document.createElement('div');
+            card.className = 'participant-card';
+            card.style.borderLeftColor = getLevelColor(participant.level)
+
+            const levelObjectives = defaultObjectives[participant.level] || [];
+            const completed = participant.completedObjectives.size;
+            const total = levelObjectives.length;
+            const progress = total > 0 ? (completed / total) * 100 : 0;
+
+            card.innerHTML = `
+                <div class="participant-header">
+                    <span class="participant-name">${participant.name}</span>
+                    <div class="level-controls">
+                        <select class="level-select" onchange="changeParticipantLevel(${participant.id}, this.value)">
+                            ${generateLevelOptions(participant.level)}
+                        </select>
+                    </div>
+                </div>
+                <div class="objectives-grid">
+                    ${levelObjectives.map((objective, i) => `
+                        <div class="objective-item">
+                            <div class="objective-checkbox ${participant.completedObjectives.has(i) ? 'checked' : ''}" 
+                                 onclick="toggleObjective(${participant.id}, ${i})"></div>
+                            <span class="objective-text" onclick="toggleObjective(${participant.id}, ${i})">${objective.name}</span>
+                            <div class="info-icon" data-obj-name="${objective.name}" data-obj-desc="${objective.description}" onclick="showObjectiveInfoFromData(this)">i</div>
+                            
+                        </div>
+                    `).join('')}
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: ${progress}%"></div>
+                </div>
+                
+            `;
+
+            return card;
+        }
+
+        function changeParticipantLevel(participantId, newLevel) {
+            const group = groups[currentGroupId];
+            const participant = group.participants.find(p => p.id === participantId);
+            participant.level = parseInt(newLevel);
+            participant.completedObjectives.clear(); // Reset objectives when level changes
+            saveData();
+
+            if (currentView === 'participant') {
+                renderParticipants();
+            } else {
+                renderObjectives();
+            }
+            updateClassSummary();
+        }
+
+        function toggleObjective(participantId, objectiveIndex) {
+            const group = groups[currentGroupId];
+            const participant = group.participants.find(p => p.id === participantId);
+
+            if (participant.completedObjectives.has(objectiveIndex)) {
+                participant.completedObjectives.delete(objectiveIndex);
+            } else {
+                participant.completedObjectives.add(objectiveIndex);
+            }
+
+            saveData();
+
+            if (currentView === 'participant') {
+                renderParticipants();
+            } else {
+                renderObjectives();
+            }
+            updateClassSummary();
+        }
+
+        function toggleObjectiveInView(participantId, objectiveIndex) {
+            toggleObjective(participantId, objectiveIndex);
+        }
+
+        function showObjectiveInfoFromData(element) {
+            const name = element.dataset.objName;
+            const description = element.dataset.objDesc;
+            showObjectiveInfo(name, description);
+        }
+
+        function updateClassSummary() {
+            const group = groups[currentGroupId];
+            const totalObjectives = group.participants.reduce((sum, p) => sum + (defaultObjectives[p.level] || []).length, 0);
+            const completedObjectives = group.participants.reduce((sum, p) => sum + p.completedObjectives.size, 0);
+            const overallProgress = totalObjectives > 0 ? Math.round((completedObjectives / totalObjectives) * 100) : 0;
+
+            document.getElementById('classSummary').innerHTML = `
+                Progrès du groupe : ${overallProgress}%
+            `;
+        }
+
+        function deleteGroup(groupId) {
+            if (confirm('Etes-vous sûr de vouloir supprimer ce groupe ?')) {
+                delete groups[groupId];
+                if (currentGroupId === groupId) {
+                    currentGroupId = null;
+                    localStorage.removeItem('currentGroupId');
+                }
+                saveData();
+                renderGroupList();
+            }
+        }
+
+        function deleteCurrentGroup() {
+            document.getElementById('deleteModal').style.display = 'block';
+        }
+
+        function confirmDeleteGroup() {
+            if (currentGroupId && groups[currentGroupId]) {
+                delete groups[currentGroupId];
+                localStorage.removeItem('currentGroupId');
+                currentGroupId = null;
+                saveData();
+                closeModal('deleteModal');
+                showMainMenu();
+            }
+        }
+
+        function closeModal(modalId) {
+            document.getElementById(modalId).style.display = 'none';
+        }
+
+        function showAddParticipant() {
+            if (!currentGroupId || !groups[currentGroupId]) {
+                alert('No group selected');
+                return;
+            }
+
+            const group = groups[currentGroupId];
+            document.getElementById('newParticipantName').value = '';
+            document.getElementById('newParticipantLevel').innerHTML = generateLevelOptions(group.level);
+            document.getElementById('addParticipantModal').style.display = 'block';
+            // Add Enter key listener
+
+                // Ajouter l'addEventListener seulement après avoir affiché le modal
+                const nameInput = document.getElementById('newParticipantName');
+                if (nameInput && !nameInput.hasEnterListener) {
+                    nameInput.addEventListener('keypress', function (event) {
+                        if (event.key === 'Enter') {
+                            event.preventDefault();
+                            addNewParticipant();
+                        }
+                    });
+                    nameInput.hasEnterListener = true;
+                }
+            }
+
+        function addNewParticipant() {
+            const name = document.getElementById('newParticipantName').value.trim();
+            const level = parseInt(document.getElementById('newParticipantLevel').value);
+
+            if (!name) {
+                alert('Veuillez entrer un nom');
+                return;
+            }
+
+            const group = groups[currentGroupId];
+            const newId = Math.max(...group.participants.map(p => p.id), 0) + 1;
+
+            const newParticipant = {
+                id: newId,
+                name: name,
+                level: level,
+                completedObjectives: new Set()
+            };
+
+            group.participants.push(newParticipant);
+            saveData();
+
+            // Refresh the current view
+            if (currentView === 'participant') {
+                renderParticipants();
+            } else {
+                renderObjectives();
+            }
+            updateClassSummary();
+
+            closeModal('addParticipantModal');
+        }
+
+        function showObjectiveInfo(name, description) {
+            document.getElementById('modalObjectiveTitle').textContent = name;
+            document.getElementById('modalObjectiveDescription').textContent = description;
+            document.getElementById('objectiveModal').style.display = 'block';
+        }
+
+
+        // Modal controls
+        document.querySelectorAll('.close').forEach(closeBtn => {
+            closeBtn.onclick = function () {
+                this.closest('.modal').style.display = 'none';
+            }
+        });
+
+        window.onclick = function (event) {
+            const modals = document.querySelectorAll('.modal');
+            modals.forEach(modal => {
+                if (event.target === modal) {
+                    modal.style.display = 'none';
+                }
+            });
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function () {
+            loadData();
+
+             // Populate level dropdowns avec vérification
+            const groupLevelSelect = document.getElementById('groupLevel');
+            if (groupLevelSelect) {
+                groupLevelSelect.innerHTML = generateLevelOptions(2);
+            }
+            
+            
+            // modifié pour que menu principal si rechargement (supprimer 3 commentaires suivants si besoin de modif):If there's a current group, go directly to evaluation
+            // if (currentGroupId && groups[currentGroupId]) {
+            //    showEvaluation();
+            //}
+        });
+    </script>
+</body>
+
+</html>
