@@ -1,0 +1,5 @@
+Copyright (c) 2026 Quentin Cetlin
+
+Tous droits réservés. Ce logiciel et son code source sont la propriété 
+exclusive de Quentin Cetlin. Toute reproduction, distribution, modification 
+ou utilisation sans autorisation écrite préalable est strictement interdite.
