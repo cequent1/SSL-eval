@@ -963,13 +963,17 @@ window.addEventListener('load', () => {
             ],
             5: [
                 { name: "Freiner en parallèle", 
-                description: "Arrêt contrôlé des deux côtés avec les skis parallèles et des mouvements de bascule et d'angulation. Depuis la traversée et la ligne de pente. Attitude de base naturelle." },
+                description: "Arrêt contrôlé des deux côtés avec les skis parallèles et des mouvements de bascule et d'angulation. Depuis la traversée et la ligne de pente. Attitude de base naturelle.",
+                video: "https://youtu.be/KXrcqeJdQ-k?list=PLTjTiqlkvSKmwoTFgcBKGF5a0GflC1QWa&t=10" },
                 { name: "Pas tournant sur piste facile", 
-                description: "Depuis la ligne de pente, réaliser une suite de pas enchaînés en forme de S. Il peut y avoir de courtes phases de glisse et de dérapage." },
+                description: "Depuis la ligne de pente, réaliser une suite de pas enchaînés en forme de S. Il peut y avoir de courtes phases de glisse et de dérapage.",
+                video: "https://youtu.be/KXrcqeJdQ-k?list=PLTjTiqlkvSKmwoTFgcBKGF5a0GflC1QWa&t=25" },
                 { name: "Valse", 
-                description: "Valse fluide par la gauche et par la droite avec les skis le plus parallèle possible." },
+                description: "Valse fluide par la gauche et par la droite avec les skis le plus parallèle possible.",
+                video: "https://youtu.be/KXrcqeJdQ-k?list=PLTjTiqlkvSKmwoTFgcBKGF5a0GflC1QWa&t=49" },
                 { name: "Virage parallèle dérapé", 
-                description: "Avec une attitude de base naturelle, réaliser des virages parallèles avec les phases du virage visibles." }
+                description: "Avec une attitude de base naturelle, réaliser des virages parallèles avec les phases du virage visibles.",
+                video: "https://youtu.be/KXrcqeJdQ-k?list=PLTjTiqlkvSKmwoTFgcBKGF5a0GflC1QWa&t=65" }
             ],
             6: [
                 { name: "Virage court sur piste facile", 
@@ -992,15 +996,15 @@ window.addEventListener('load', () => {
                 description: "Virages courts rythmés avec contrôle de la vitesse et skis parallèles. Attitude de base naturelle et utilisation des bâtons visible." }
             ],
             8: [
-            { name: "Virage court avec utilisation des bâtons sur piste difficile", 
-            description: "Virages courts rythmés avec contrôle de la vitesse et skis parallèles. Attitude base naturelle avec haut du corps stable. Utilisation des bâtons coordonnée et phases du virage visibles." },
-            { name: "Sauts straights et fifty-fifty sur box", 
-            description: "La forme de saut est annoncée à l'avance et est démontrée. Phases de vol et d'atterrissage sûres avec une attitude de base stable. Sauter longitudinalement sur le box et glisser avec les skis parallèles et à plat." },
-            { name: "Virage parallèle en neige non préparée", 
-            description: "Descente fluide et contrôlée avec les skis parallèles en variant les rayons. Les phases du virage sont visibles." },
-            { name: "Carving (virage parallèle coupé) sur piste large et facile", 
-            description: "Virages parallèles coupés au moins avec le ski extérieur (contrôle de la vitesse). Attitude base naturelle et phases du virage visibles." }
-        ],
+                { name: "Virage court avec utilisation des bâtons sur piste difficile", 
+                description: "Virages courts rythmés avec contrôle de la vitesse et skis parallèles. Attitude base naturelle avec haut du corps stable. Utilisation des bâtons coordonnée et phases du virage visibles." },
+                { name: "Sauts straights et fifty-fifty sur box", 
+                description: "La forme de saut est annoncée à l'avance et est démontrée. Phases de vol et d'atterrissage sûres avec une attitude de base stable. Sauter longitudinalement sur le box et glisser avec les skis parallèles et à plat." },
+                { name: "Virage parallèle en neige non préparée", 
+                description: "Descente fluide et contrôlée avec les skis parallèles en variant les rayons. Les phases du virage sont visibles." },
+                { name: "Carving (virage parallèle coupé) sur piste large et facile", 
+                description: "Virages parallèles coupés au moins avec le ski extérieur (contrôle de la vitesse). Attitude base naturelle et phases du virage visibles." }
+            ],
             9: [
                 { name: "Virage parallèle de compétition race", 
                 description: "Attitude de base dynamique avec haut du corps stable. Mouvements clés et fonctions des skis visibles dans les phases du virage. Utilisation du drift et de la position de recherche de vitesse selon la situation." },
@@ -1211,6 +1215,13 @@ window.addEventListener('load', () => {
                     <div style="color: #666; font-size: 14px; line-height: 1.4;">
                         ${objective.description}
                     </div>
+                    ${objective.video ? `
+                    <div style="margin-top: 10px;">
+                        <a href="${objective.video}" target="_blank" rel="noopener noreferrer" style="color: #e74c3c; text-decoration: none; font-size: 14px; display: inline-flex; align-items: center; gap: 5px;">
+                            📹 Voir la vidéo
+                        </a>
+                    </div>
+                    ` : ''}
                 </div>
             `).join('');
         }
