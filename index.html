@@ -514,6 +514,11 @@
         #modalObjectiveDescription {
             text-align: justify;
         }
+        
+        #modalObjectiveVideo {
+            text-align: center;
+            margin-top: 15px;
+        }
 
         .edit-objectives {
             margin-top: 20px;
@@ -1837,7 +1842,7 @@ window.addEventListener('load', () => {
             const videoContainer = document.getElementById('modalObjectiveVideo');
             if (video) {
                 videoContainer.innerHTML = `
-                    <a href="${video}" target="_blank" rel="noopener noreferrer" style="color: #e74c3c; text-decoration: none; font-size: 14px; display: inline-flex; align-items: center; gap: 5px; margin-top: 10px;">
+                    <a href="${video}" target="_blank" rel="noopener noreferrer" style="color: #e74c3c; text-decoration: none; font-size: 14px; display: inline-flex; align-items: center; gap: 5px;">
                         📹 Voir la vidéo
                     </a>
                 `;
