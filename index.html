@@ -1828,9 +1828,10 @@ window.addEventListener('load', () => {
             closeModal('addParticipantModal');
         }
 
-        function showObjectiveInfo(name, description) {
+        function showObjectiveInfo(name, description, video) {
             document.getElementById('modalObjectiveTitle').textContent = name;
             document.getElementById('modalObjectiveDescription').textContent = description;
+            document.getElementById('modalObjectiveVideo').innerHTML = ''; // Clear previous video link
             document.getElementById('objectiveModal').style.display = 'block';
         }
 
