@@ -1624,7 +1624,7 @@ window.addEventListener('load', () => {
                         <div class="level-group">
                             <div class="level-group-header">
                                 <div class="level-group-title">${levelObjective.name}</div>
-                                <div class="info-icon" data-obj-name="${levelObjective.name}" data-obj-desc="${levelObjective.description}" onclick="showObjectiveInfoFromData(this)">i</div>
+                                <div class="info-icon" data-obj-name="${objective.name}" data-obj-desc="${objective.description}" data-obj-video="${objective.video || ''}" onclick="showObjectiveInfoFromData(this)">i</div>
                             </div>
                                 <div class="participants-row">
                                 ${levelParticipants.map(participant => `
@@ -1669,8 +1669,7 @@ window.addEventListener('load', () => {
                             <div class="objective-checkbox ${participant.completedObjectives.has(i) ? 'checked' : ''}" 
                                  onclick="toggleObjective(${participant.id}, ${i})"></div>
                             <span class="objective-text" onclick="toggleObjective(${participant.id}, ${i})">${objective.name}</span>
-                            <div class="info-icon" data-obj-name="${objective.name}" data-obj-desc="${objective.description}" onclick="showObjectiveInfoFromData(this)">i</div>
-                            
+                            <div class="info-icon" data-obj-name="${objective.name}" data-obj-desc="${objective.description}" data-obj-video="${objective.video || ''}" onclick="showObjectiveInfoFromData(this)">i</div>                            
                         </div>
                     `).join('')}
                 </div>
@@ -1725,7 +1724,8 @@ window.addEventListener('load', () => {
         function showObjectiveInfoFromData(element) {
             const name = element.dataset.objName;
             const description = element.dataset.objDesc;
-            showObjectiveInfo(name, description);
+            const video = element.dataset.objVideo || ''; // Récupère la vidéo si elle existe
+            showObjectiveInfo(name, description, video);
         }
 
         function updateClassSummary() {
@@ -1831,7 +1831,19 @@ window.addEventListener('load', () => {
         function showObjectiveInfo(name, description, video) {
             document.getElementById('modalObjectiveTitle').textContent = name;
             document.getElementById('modalObjectiveDescription').textContent = description;
-            document.getElementById('modalObjectiveVideo').innerHTML = ''; // Clear previous video link
+            
+            // Gérer l'affichage du lien vidéo
+            const videoContainer = document.getElementById('modalObjectiveVideo');
+            if (video) {
+                videoContainer.innerHTML = `
+                    <a href="${video}" target="_blank" rel="noopener noreferrer" style="color: #e74c3c; text-decoration: none; font-size: 14px; display: inline-flex; align-items: center; gap: 5px; margin-top: 10px;">
+                        📹 Voir la vidéo
+                    </a>
+                `;
+            } else {
+                videoContainer.innerHTML = ''; // Pas de vidéo
+            }
+            
             document.getElementById('objectiveModal').style.display = 'block';
         }
 

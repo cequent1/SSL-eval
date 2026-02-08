@@ -1,5 +1,5 @@
 // Service Worker pour l'application SSL Evaluation
-const CACHE_NAME = 'ssl-eval-v11'; // ⬅️ Incrémente ce numéro à chaque mise à jour !
+const CACHE_NAME = 'ssl-eval-v12'; // ⬅️ Incrémente ce numéro à chaque mise à jour !
 const urlsToCache = [
   './',
   './index.html'
